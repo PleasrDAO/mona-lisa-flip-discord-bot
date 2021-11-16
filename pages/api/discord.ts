@@ -62,6 +62,8 @@ export default async function handler(
   res: NextApiResponse<Data>
 ) {
   const client = new Client({ ws: { intents: [Intents.FLAGS.GUILDS] } });
+  client.on("debug", console.log);
+
   const [dogUsdPrice, _] = await Promise.all([
     getDogUsdPrice(),
     client.login(process.env.DISCORD_TOKEN),
