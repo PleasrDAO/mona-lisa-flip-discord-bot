@@ -1,5 +1,4 @@
-// Next.js API route support: https://nextjs.org/docs/api-routes/introduction
-import type { NextApiRequest, NextApiResponse } from "next";
+require("dotenv").config();
 
 // Require the necessary discord.js classes
 import { Client, Intents } from "discord.js";
@@ -7,7 +6,7 @@ import { Client, Intents } from "discord.js";
 import { ethers } from "ethers";
 import { Contract } from "@ethersproject/contracts";
 
-import abi from "../../lib/abi";
+import abi from "./lib/abi";
 
 export const provider = new ethers.providers.InfuraProvider(
   1,
@@ -53,21 +52,8 @@ async function monaLisaPercentage(dogUsdPrice: number) {
   return ((dogUsdPrice * DOG_SUPPLY) / MONA_LISA_VALUE) * 100;
 }
 
-type Data = {
-  iluvu: boolean;
-};
-
-export default async function handler(
-  req: NextApiRequest,
-  res: NextApiResponse<Data>
-) {
-  const client = new Client({ ws: { intents: [Intents.FLAGS.GUILDS] } });
-  client.on("debug", console.log);
-
-  const [dogUsdPrice, _] = await Promise.all([
-    getDogUsdPrice(),
-    client.login(process.env.DISCORD_TOKEN),
-  ]);
+async function tick(client: Client) {
+  const [dogUsdPrice] = await Promise.all([getDogUsdPrice()]);
   const monaLisaP = monaLisaPercentage(dogUsdPrice);
 
   const guilds = client.guilds.cache;
@@ -75,15 +61,6 @@ export default async function handler(
     guilds.map(async (guild) => {
       const g = await guild.fetch();
       const n = g.me?.nickname;
-      // const lastPrice = parseInt(n?.match(/^Ξ(\d+)/)?.[1] || "");
-      // const isFlat = lastPrice == price;
-      // const updown = isFlat ? "→" : lastPrice < price ? "↗" : "↘";
-
-      // console.log({
-      //   lastPrice,
-      //   price: price.toString(),
-      //   usd: price * ethPrice,
-      // });
 
       g.me?.setNickname(`${(await monaLisaP).toPrecision(3)}%`);
     })
@@ -93,6 +70,16 @@ export default async function handler(
     activity: { name: `\$${dogUsdPrice.toPrecision(4)}`, type: 3 },
     status: "online",
   });
-
-  res.status(200).json({ iluvu: true });
 }
+
+async function go() {
+  const client = new Client({ ws: { intents: [Intents.FLAGS.GUILDS] } });
+  client.on("debug", console.log);
+  await client.login(process.env.DISCORD_TOKEN);
+  console.log("logged in");
+  tick(client);
+  setInterval(() => tick(client), 1000 * 60);
+}
+
+console.log("hello", process.env.DISCORD_TOKEN, process.env.INFURA_PROJECT);
+go();

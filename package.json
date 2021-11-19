@@ -2,18 +2,12 @@
   "name": "dog-discord-bot",
   "private": true,
   "scripts": {
-    "dev": "next dev",
-    "build": "next build",
-    "start": "next start",
-    "lint": "next lint"
+    "start": "ts-node index.ts"
   },
   "dependencies": {
     "discord.js": "^12.5.3",
     "dotenv": "^10.0.0",
     "ethers": "^5.5.1",
-    "next": "12.0.2",
-    "react": "17.0.2",
-    "react-dom": "17.0.2",
     "web3": "^1.6.0"
   },
   "devDependencies": {
