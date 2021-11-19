@@ -1,0 +1,12 @@
+[Unit]
+Description=Dog Discord Bot
+
+[Service]
+Type=simple
+User=zen
+WorkingDirectory=/home/zen/mona-lisa-flip-discord-bot
+ExecStart=/usr/bin/yarn start
+Restart=always
+
+[Install]
+WantedBy=multi-user.target
