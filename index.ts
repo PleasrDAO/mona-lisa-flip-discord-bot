@@ -70,7 +70,7 @@ async function tick(client: Client) {
   );
 
   await client.user?.setPresence({
-    activity: { name: `\$${presenceStatus}`, type: 2 },
+    activity: { name: `\$${presenceStatus}`, type: 3 },
     status: "online",
   });
 
@@ -86,5 +86,5 @@ async function go() {
   setInterval(() => tick(client), 1000 * 60);
 }
 
-console.log("hello", process.env.DISCORD_TOKEN, process.env.INFURA_PROJECT);
+console.log("hello", process.env.DISCORD_TOKEN, process.env.INFURA_PRWOJECT);
 go();
