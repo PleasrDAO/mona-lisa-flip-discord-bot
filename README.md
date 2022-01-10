@@ -2,7 +2,7 @@
 
 - `yarn start`
 
-Displays the price of $Squid in ETH and in $USD.
+Displays the Doge NFT's marketcap as a percentage of Mona Lisa's inflation adjusted appraised price.
 
 ## Configuration
 
