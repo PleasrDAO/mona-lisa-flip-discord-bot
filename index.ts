@@ -57,7 +57,7 @@ async function monaLisaPercentage(dogUsdPrice: number) {
 async function tick(client: Client) {
   const [dogUsdPrice] = await Promise.all([getDogUsdPrice()]);
   const monaLisaP = monaLisaPercentage(dogUsdPrice);
-  const presenceStatus = showPixelPrice ?  ((dogUsdPrice * 55240).toPrecision(4).toString() + " per pixel" ) : (dogUsdPrice.toPrecision(4));
+  const presenceStatus = showPixelPrice ?  ((dogUsdPrice * 55240).toPrecision(4).toString() + " per pixel." ) : (dogUsdPrice.toPrecision(4));
 
   const guilds = client.guilds.cache;
   await Promise.all(
