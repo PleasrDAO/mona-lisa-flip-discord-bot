@@ -23,6 +23,8 @@ const dogWethSushiswap = new Contract(DOG_WETH_PAIR, abi, provider);
 
 const usdcWethSushiswap = new Contract(USDC_WETH_PAIR, abi, provider);
 
+var showPixelPrice = false;
+
 async function getDogEthPrice() {
   const [r0, r1] = await dogWethSushiswap.functions["getReserves"]();
 
@@ -55,6 +57,7 @@ async function monaLisaPercentage(dogUsdPrice: number) {
 async function tick(client: Client) {
   const [dogUsdPrice] = await Promise.all([getDogUsdPrice()]);
   const monaLisaP = monaLisaPercentage(dogUsdPrice);
+  const presenceStatus = showPixelPrice ?  ((dogUsdPrice * 55240).toPrecision(4).toString() + " per pixel" ) : (dogUsdPrice.toPrecision(4));
 
   const guilds = client.guilds.cache;
   await Promise.all(
@@ -67,9 +70,11 @@ async function tick(client: Client) {
   );
 
   await client.user?.setPresence({
-    activity: { name: `\$${dogUsdPrice.toPrecision(4)}`, type: 3 },
+    activity: { name: `\$${presenceStatus}`, type: 2 },
     status: "online",
   });
+
+  showPixelPrice = !showPixelPrice;
 }
 
 async function go() {
